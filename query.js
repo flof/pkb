@@ -4,6 +4,8 @@ var pg = require('pg'),
 // TODO move to config
 var conString = "tcp://pkb:pkb@localhost/pkb";
 
+var PAGE_SIZE = 10;
+
 exports.findItems = function(q, start, callback) {
   pg.connect(conString, function(err, client) {
     async.parallel({
@@ -30,7 +32,7 @@ function getItemList(q, start, client, callback) {
     + whereClause.sql
     + ' order by id desc offset $' + idx++ + ' limit $' + idx++;
   var params = whereClause.params;
-  params.push(start, 10);
+  params.push(start, PAGE_SIZE);
   client.query(sql, params, callback);
 }
 
